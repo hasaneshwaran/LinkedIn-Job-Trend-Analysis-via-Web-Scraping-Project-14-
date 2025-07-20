@@ -1,29 +1,51 @@
-# LinkedIn Job Data Analysis - Project Guide
+# Job Posts Data Analysis
 
-## Overview
-This project analyzes LinkedIn job postings data (from Kaggle) to extract useful insights such as:
-- Most in-demand job titles
-- Top hiring locations
-- Most requested skills
-- Top industries (from job_industries.csv)
-- Basic salary and job type summaries (if available)
+This mini-project processes a dataset of job posts and generates summarized insights for presentation.  
+The script cleans the dataset, extracts the most common companies, job titles, and locations, and exports both tabular and visual results for use in reports or presentations.
 
-The analysis generates:
-1. Summary tables (Excel)
-2. Bar charts (PNG images)
-3. Data formatted for Pivot Tables (for interactive reporting)
+## Files
 
----
+- **Model.py**  
+  Python script that processes the job posts CSV file and produces outputs.
 
-## Project Files
-The Kaggle dataset includes:
-- `postings.csv`: Core job postings data (titles, skills, locations, salaries, etc.)
-- `job_industries.csv`: Job industry classification data (job_id and industries)
-- Other supporting folders (`companies`, `jobs`, `mappings`) not directly needed here.
+- **data job posts.csv**  
+  The dataset containing job titles, companies, and locations.
+2. Cleans the dataset by:
+- Removing rows missing job title, company, or location.
+- Standardizing capitalization and whitespace.
 
----
+3. Calculates:
+- Top 10 most frequent companies.
+- Top 10 most frequent job titles.
+- Top 10 most frequent job locations.
 
-## Setup
-1. Install dependencies:
-   ```bash
-   pip install pandas matplotlib openpyxl
+4. Saves:
+- Summary table as `job_summary.xlsx`.
+- Three visual bar charts as PNG files.3. Open Command Prompt and run:
+```bash
+E:
+cd hasan
+python Model.py
+
+
+## How to Run
+
+1. Ensure Python and the required libraries (`pandas`, `matplotlib`, `openpyxl`) are installed.
+2. Place `Model.py` in:
+
+
+- **job_summary.xlsx**  
+  Excel file with the top 10 companies, job titles, and locations.
+
+- **top_companies.png**  
+  Bar chart showing the top 10 companies hiring.
+
+- **top_locations.png**  
+  Bar chart showing the top 10 job locations.
+
+- **top_titles.png**  
+  Bar chart showing the top 10 job titles.
+
+## How It Works
+
+1. Reads the CSV file from:
