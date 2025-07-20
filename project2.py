@@ -1,55 +1,49 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+import warnings
 
-df = pd.read_csv(r"C:\vel\data\job_industries.csv", nrows=10)
-print("Shape:", df.shape)
-print("Columns:", df.columns.tolist())
-print(df.head())
+warnings.filterwarnings("ignore")
 
-df = pd.read_csv(r"C:\vel\data\job_industries.csv")
+csv_path = r"C:\Users\PREMAVATHY\Videos\Captures\data job posts.csv"
+output_folder = r"C:\Users\PREMAVATHY\Videos\Captures"
 
-print("Columns:", df.columns.tolist())
-print("Sample:\n", df.head(3))
+output_excel = os.path.join(output_folder, "job_summary.xlsx")
+output_companies = os.path.join(output_folder, "top_companies.png")
+output_locations = os.path.join(output_folder, "top_locations.png")
+output_titles = os.path.join(output_folder, "top_titles.png")
 
-industry_col = 'industry'
-location_col = 'location'
-count_col = 'job_id'
+df = pd.read_csv(csv_path)
+df = df.dropna(subset=['Title', 'Company', 'Location'])
+df['Title'] = df['Title'].str.strip().str.title()
+df['Company'] = df['Company'].str.strip().str.title()
+df['Location'] = df['Location'].str.strip()
 
-output_dir = r"C:\vel\data\analysis_industries"
-os.makedirs(output_dir, exist_ok=True)
+top_companies = df['Company'].value_counts().head(10)
+top_locations = df['Location'].value_counts().head(10)
+top_titles = df['Title'].value_counts().head(10)
 
-if industry_col in df.columns:
-    top_industries = df[industry_col].value_counts().head(10)
-    print("\nTop 10 Industries:\n", top_industries)
+summary = pd.DataFrame({
+    'Top Companies': top_companies,
+    'Top Locations': top_locations,
+    'Top Job Titles': top_titles
+}).fillna('')
+summary.to_excel(output_excel, index=True)
 
-    plt.figure(figsize=(8,4))
-    top_industries.plot(kind='barh', color='purple')
-    plt.title("Top 10 Industries")
-    plt.xlabel("Job Count")
-    plt.ylabel("Industry")
-    plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "top_industries.png"))
-    plt.close()
+plt.figure(figsize=(12,6))
+top_companies.plot(kind='bar', title='Top 10 Hiring Companies', color='skyblue')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.savefig(output_companies)
 
-if location_col in df.columns:
-    top_locations = df[location_col].value_counts().head(10)
-    print("\nTop 10 Locations:\n", top_locations)
+plt.figure(figsize=(12,6))
+top_locations.plot(kind='bar', color='orange', title='Top 10 Job Locations')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.savefig(output_locations)
 
-    plt.figure(figsize=(8,4))
-    top_locations.plot(kind='barh', color='orange')
-    plt.title("Top 10 Locations (Industries)")
-    plt.xlabel("Job Count")
-    plt.ylabel("Location")
-    plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "top_industry_locations.png"))
-    plt.close()
-
-excel_path = os.path.join(output_dir, "job_industries_summary.xlsx")
-with pd.ExcelWriter(excel_path) as writer:
-    if industry_col in df.columns:
-        top_industries.to_frame("Count").to_excel(writer, sheet_name="Top Industries")
-    if location_col in df.columns:
-        top_locations.to_frame("Count").to_excel(writer, sheet_name="Top Locations")
-
-print(f"\nAnalysis complete! Check: {output_dir}")
+plt.figure(figsize=(12,6))
+top_titles.plot(kind='bar', color='green', title='Top 10 Job Titles')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.savefig(output_titles)
